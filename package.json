@@ -1,0 +1,28 @@
+{
+  "name": "04-backend-server",
+  "version": "1.0.0",
+  "description": "Recuerde ejecutar",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "mongoose": "^5.13.22"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nataliavarela24/admin-pro-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nataliavarela24/admin-pro-backend/issues"
+  },
+  "homepage": "https://github.com/nataliavarela24/admin-pro-backend#readme"
+}
