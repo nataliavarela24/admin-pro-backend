@@ -8,6 +8,7 @@ const { googleVerify } = require('../helpers/google-verify');
 const login = async(req, res = response )=>{
 
     const { email, password } = req.body
+    
 
     try {
 
@@ -93,7 +94,22 @@ const googleSingIn = async(req, res = response )=>{
      
 
 }
+
+const renewToken = async(req, res = response )=>{
+
+    const uid = req.uid;
+
+    //Generar el token -JWT
+    const token = await generarJWT(uid);
+
+    res.json({
+        ok:true,
+        token
+    });
+
+}
 module.exports ={
     login,
-    googleSingIn
+    googleSingIn,
+    renewToken
 }
