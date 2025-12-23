@@ -8,8 +8,8 @@ const { generarJWT } = require('../helpers/jwt')
 
 
 const getUsuarios = async (req, res) => {
-     const desde = Number(req.query.desde|| 0);
-        console.log(desde);
+    const desde = Number(req.query.desde || 0);
+    console.log(desde);
     /* const usuarios = await Usuario
                                   .find({},'nombre email role google')
                                   .skip( desde )
@@ -17,11 +17,11 @@ const getUsuarios = async (req, res) => {
 
     const total = await Usuario.countDocuments(); */
 
-    const [ usuarios,total ] = await Promise.all([
+    const [usuarios, total] = await Promise.all([
         Usuario
-            .find({},'nombre email role google img')
-            .skip( desde )
-            .limit( 5 ),
+            .find({}, 'nombre email role google img')
+            .skip(desde)
+            .limit(5),
 
 
         Usuario.countDocuments()
@@ -42,7 +42,7 @@ const crearUsuarios = async (req, res = response) => {
 
     try {
 
-        const existeEmail = await Usuario.findOne({ email: 'fernando@gmail.com' })
+        const existeEmail = await Usuario.findOne({ email })
 
         if (existeEmail) {
             return res.status(400).json({
@@ -93,12 +93,12 @@ const actualizarUsuario = async (req, res = response) => {
         }
 
         //Actualizaciones 
-        const { password, google, email, ...campos} = req.body;
+        const { password, google, email, ...campos } = req.body;
 
         if (usuarioDB.email !== email) {
-       
+
             const existeEmail = await Usuario.findOne({ email });
-            if (existeEmail) {
+            if (existeEmail && existeEmail.id !== usuarioDB.id) {
                 return res.status(400).json({
                     ok: false,
                     msg: 'Ya existe un usuario con ese email'
@@ -107,9 +107,19 @@ const actualizarUsuario = async (req, res = response) => {
 
         }
 
-       campos.email = email;
+        if (!usuarioDB.google) {
 
-        const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos,{ new:true});
+            campos.email = email;
+            
+        } else if (usuarioDB.email !== email) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Usuario de google no pueden cambiar su correo'
+            });
+
+        }
+
+        const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, { new: true });
 
         res.json({
             ok: true,
@@ -124,7 +134,7 @@ const actualizarUsuario = async (req, res = response) => {
     }
 
 }
-const borrarUsuarios = async(req, res = response)=>{
+const borrarUsuarios = async (req, res = response) => {
     console.log(req)
     const uid = req.params.id;
     try {
@@ -143,13 +153,13 @@ const borrarUsuarios = async(req, res = response)=>{
         });
 
     } catch (error) {
-            console.log(error);
-            res.status(500).json({
-                ok: false,
-                msg: 'Error inesperados'
-            })
-        }
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperados'
+        })
     }
+}
 
 
 
