@@ -135,31 +135,36 @@ const actualizarUsuario = async (req, res = response) => {
 
 }
 const borrarUsuarios = async (req, res = response) => {
-    console.log(req)
+
     const uid = req.params.id;
+
     try {
+
         const usuarioDB = await Usuario.findById(uid);
+
         if (!usuarioDB) {
             return res.status(404).json({
                 ok: false,
                 msg: 'No existe usuario con ese id'
             });
         }
-        const borrarUsuarios = Usuario.findByIdAndDelete(uid);
 
-        res.json({
+        await Usuario.findByIdAndDelete(uid);
+
+        return res.json({
             ok: true,
-            usuario: borrarUsuarios
+            msg: 'Usuario eliminado'
         });
 
     } catch (error) {
-        console.log(error);
-        res.status(500).json({
+        console.error('Error al borrar usuario:', error);
+        return res.status(500).json({
             ok: false,
-            msg: 'Error inesperados'
-        })
+            msg: 'Error interno del servidor'
+        });
     }
-}
+};
+
 
 
 
