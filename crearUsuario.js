@@ -8,7 +8,6 @@ const crearUsuario = async () => {
         // Conectamos a la BD usando tu función
         await dbConnection();
 
-        console.log('✅ Conectado a MongoDB Atlas');
 
         // Encriptamos la contraseña
         const salt = bcrypt.genSaltSync();
@@ -24,9 +23,6 @@ const crearUsuario = async () => {
         });
 
         await usuario.save();
-
-        console.log('🎉 Usuario creado correctamente:');
-        console.log(usuario);
 
         process.exit(); // Termina la ejecución
     } catch (err) {

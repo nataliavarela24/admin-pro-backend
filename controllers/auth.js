@@ -4,22 +4,22 @@ const Usuario = require('../models/usuario')
 const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
 const { googleVerify } = require('../helpers/google-verify');
+const { getMenufrontEnd } = require('../helpers/menu-frontend');
 
 const login = async (req, res = response) => {
 
     const { email, password } = req.body;
 
-    console.log("LOGIN - Body recibido:", req.body);
 
     try {
 
         const usuarioDB = await Usuario.findOne({ email });
 
 
-        console.log("LOGIN - Usuario encontrado:", usuarioDB);
+        
 
         if (!usuarioDB) {
-            console.log("LOGIN - Email no válido");
+          
             return res.status(404).json({
                 ok: false,
                 msg: 'Email no válida'
@@ -28,10 +28,10 @@ const login = async (req, res = response) => {
 
         const validPasword = bcrypt.compareSync(password, usuarioDB.password);
 
-        console.log("LOGIN - Password válido:", validPasword);
+    
 
         if (!validPasword) {
-            console.log("LOGIN - Contraseña incorrecta");
+           
             return res.status(400).json({
                 ok: false,
                 msg: 'Constraseña no valida'
@@ -40,12 +40,12 @@ const login = async (req, res = response) => {
 
         const token = await generarJWT(usuarioDB.id);
 
-        console.log("LOGIN - Token generado:", token);
 
         res.json({
             ok: true,
             token: token,
-            usuario: usuarioDB
+            usuario: usuarioDB,
+            menu:getMenufrontEnd( usuarioDB.role)
         });
 
     } catch (error) {
@@ -102,7 +102,8 @@ const googleSingIn = async (req, res = response) => {
         res.json({
             ok: true,
             token,
-            usuario
+            usuario,
+            menu:getMenufrontEnd( usuario.role)
         });
 
     } catch (error) {
@@ -131,7 +132,8 @@ const renewToken = async (req, res = response) => {
     res.json({
         ok: true,
         token,
-        usuario
+        usuario,
+        menu:getMenufrontEnd( usuario.role)
     });
 
 
